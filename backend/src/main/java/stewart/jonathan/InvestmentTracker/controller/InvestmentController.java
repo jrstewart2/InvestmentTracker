@@ -42,4 +42,10 @@ public class InvestmentController {
         investmentService.deleteInvestment(id);
     }
 
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void updateInvestment(@PathVariable String id,
+                                 @RequestBody Investment investment) {
+        investmentService.updateInvestment(id, investment);
+    }
 }

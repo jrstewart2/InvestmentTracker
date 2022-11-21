@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import stewart.jonathan.InvestmentTracker.model.Investment;
 import stewart.jonathan.InvestmentTracker.repository.InvestmentRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 
@@ -41,5 +42,13 @@ public class InvestmentService {
             throw new IllegalArgumentException("The company " + id + " is not in your investment portfolio");
         }
     }
+
+    @Transactional
+    public void updateInvestment(String id, Investment investment) {
+        Investment current = investmentRepository.findById(id)
+                        .orElseThrow(() -> new IllegalArgumentException("Company " + id + "not found in your portfolio"));
+        current.setCompany(investment.getCompany());
+        current.setShares(investment.getShares());
+        }
 
 }
