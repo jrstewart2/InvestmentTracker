@@ -20,6 +20,11 @@ public class InvestmentController {
         this.investmentService = investmentService;
     }
 
+    @GetMapping("/")
+    String welcome(){
+        return "Welcome to your online Investment Portfolio Web App";
+    }
+
     @GetMapping
     public List<Investment> getInvestments(){
         return investmentService.getInvestments();

@@ -28,6 +28,7 @@ public class InvestmentService {
                 .filter(i -> id.equals(i.getId()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Company ticker symbol not found in your portfolio"));
+
     }
 
     public void addInvestment(Investment investment) {

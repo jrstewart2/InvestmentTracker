@@ -3,6 +3,7 @@ package stewart.jonathan.InvestmentTracker;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+
 @SpringBootApplication
 public class InvestmentTrackerApplication {
 
@@ -10,7 +11,7 @@ public class InvestmentTrackerApplication {
 
 		SpringApplication.run(InvestmentTrackerApplication.class, args);
 
-
 	}
+
 
 }
