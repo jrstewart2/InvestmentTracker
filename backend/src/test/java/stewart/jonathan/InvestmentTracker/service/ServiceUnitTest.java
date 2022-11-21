@@ -1,31 +1,35 @@
 package stewart.jonathan.InvestmentTracker.service;
 
-import org.junit.jupiter.api.Test;
+
+import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import stewart.jonathan.InvestmentTracker.model.Investment;
 import stewart.jonathan.InvestmentTracker.repository.InvestmentRepository;
 
-import java.util.List;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-//
-//@SpringBootTest
-//@RunWith(SpringJUnit4ClassRunner.class)
-//public class ServiceUnitTest {
+@RunWith(MockitoJUnitRunner.class)
+public class ServiceUnitTest {
 
-//    @Autowired
-//    private InvestmentService service;
-//
-//    @Autowired
-//    private InvestmentRepository repo;
+    @Mock
+    InvestmentRepository repo;
 
-//    @Test
-//    public void getAllShouldReturn202() {
-//        List<Investment> investment;
-//        Mockito.when(service.getInvestments()).thenReturn(investment);
-//        String test1 = repo.
-//    }
-//}
+    @InjectMocks
+    InvestmentService service;
+
+    @Test
+    public void should_return_code_ok_when_investment_added() {
+        Investment investment = new Investment();
+        investment.setId("TEST");
+        investment.setCompany("Testing company");
+        investment.setShares(123F);
+
+        service.addInvestment(investment);
+        assertThat(service.getInvestmentById(investment.getId()).getCompany().equals(investment.getCompany()));
+    }
+
+
+}

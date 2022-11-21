@@ -1,67 +1,59 @@
 package stewart.jonathan.InvestmentTracker.controller;
 
-import org.junit.jupiter.api.Test;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import stewart.jonathan.InvestmentTracker.model.Investment;
+import stewart.jonathan.InvestmentTracker.service.InvestmentService;
 
-import java.util.Objects;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-//@SpringBootTest
-//@AutoConfigureMockMvc
 @WebMvcTest(InvestmentController.class)
-public class ControllerTest{
+public class ControllerTest {
+
+    @MockBean
+    InvestmentService investmentService;
+
+    ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
-    MockMvc mockMvc;
-
-//    @MockBean
-//    public InvestmentController controller;
+    private MockMvc mockMvc;
 
     @Test
-    void homeTest() throws Exception {
-        this.mockMvc.perform(get("http://localhost:8080/investments/"))
-                .andExpect(status().isOk())
-                // cannt get andExpect(content()... to work
-                .andDo(print());
-    }
+    public void should_return_new_investment() throws Exception {
 
-    @Test
-    public void getInvestmentsAPI() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders
-                .get("/investments")
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.investments").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.investments[*].id").isNotEmpty());
-    }
+        Investment newInvestment = new Investment();
+        newInvestment.setId("TEST");
+        newInvestment.setCompany("Testing Company");
+        newInvestment.setShares(123F);
 
-    @Test
-    public void getInvestmentByIdAPI() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/investments/{id}", 1)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.investmentsId").value(1));
-    }
+        Investment investment = new Investment();
+        investment.setId(newInvestment.getId());
+        investment.setCompany(newInvestment.getCompany());
+        investment.setShares(newInvestment.getShares());
 
+        investmentService.addInvestment(newInvestment);
+
+
+        mockMvc.perform(post("/investments")
+                .content(mapper.writeValueAsString(investment))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+                //.andExpect(MockMvcResultMatchers.jsonPath("$.shares").value(investment.getShares()));
+    }
 
 }
